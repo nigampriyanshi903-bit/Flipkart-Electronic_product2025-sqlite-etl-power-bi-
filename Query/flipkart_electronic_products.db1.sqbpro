@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="" readonly="0" foreign_keys="" case_sensitive_like="" temp_store="" wal_autocheckpoint="" synchronous=""/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2915"/><column_width id="4" width="0"/></tab_structure><tab_browse><table title="." custom_title="0" dock_id="4" table="0,0:"/><dock_state state="000000ff00000000fd00000001000000020000000000000000fc0100000004fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500320100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500330100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500340100000000ffffffff0000011800ffffff000000000000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">CREATE TABLE IF NOT EXISTS earphones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Title TEXT NOT NULL,
+    Product_URL TEXT NOT NULL,
+    Image_URL TEXT NOT NULL,
+    Rating REAL NOT NULL,
+    Rating_Count REAL NOT NULL,
+    Price REAL NOT NULL,
+    Original_Price REAL NOT NULL,
+    Discount REAL NOT NULL,
+    Offer TEXT NOT NULL,
+    Timestamp TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS laptops (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Title TEXT NOT NULL,
+    Product_Link TEXT NOT NULL,
+    Image_URL TEXT NOT NULL,
+    Rating REAL NOT NULL,
+    Ratings_Reviews TEXT,
+    Price REAL NOT NULL,
+    Original_Price REAL NOT NULL,
+    Discount REAL NOT NULL,
+    Key_Features TEXT NOT NULL,
+    Exchange_Offer TEXT NOT NULL,
+    Bank_Offer TEXT NOT NULL,
+    Timestamp TEXT NOT NULL,
+    Rating_Count REAL NOT NULL,
+    Review_Count REAL NOT NULL,
+    Timestamps TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS mobiles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Title TEXT NOT NULL,
+    Product_Link TEXT NOT NULL,
+    Image_URL TEXT NOT NULL,
+    Rating REAL NOT NULL,
+    Ratings_Reviews TEXT NOT NULL,
+    Price REAL NOT NULL,
+    Original_Price REAL NOT NULL,
+    Discount REAL NOT NULL,
+    Key_Features TEXT NOT NULL,
+    Exchange_Offer TEXT NOT NULL,
+    Bank_Offer TEXT,
+    Timestamp TEXT NOT NULL,
+    Rating_Count REAL,
+    Review_Count REAL,
+    Timestamps TEXT NOT NULL
+);</sql><current_tab id="0"/></tab_sql></sqlb_project>

@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="flipkart_electronic_products.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2915"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="earphones" custom_title="0" dock_id="1" table="4,9:mainearphones"/><dock_state state="000000ff00000000fd0000000100000002000004c9000002b6fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000004c90000012a00ffffff000002580000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="earphones" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="31"/><column index="2" value="300"/><column index="3" value="300"/><column index="4" value="300"/><column index="5" value="45"/><column index="6" value="85"/><column index="7" value="54"/><column index="8" value="87"/><column index="9" value="57"/><column index="10" value="202"/><column index="11" value="156"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">SELECT COUNT(*) FROM earphones;
+SELECT COUNT(*) FROM laptops;
+SELECT COUNT(*) FROM mobiles;
+
+#Task1:Top 10 most expensive laptops..
+SELECT Title, Price
+FROM laptops
+ORDER BY Price DESC
+LIMIT 10;
+
+#Top 10 cheapest earphones
+SELECT Title, Price
+FROM earphones
+ORDER BY Price ASC
+LIMIT 10;
+
+#Task3: Average product price per category
+SELECT 'Earphones' AS Category, AVG(Price) AS Avg_Price FROM earphones
+UNION
+SELECT 'Laptops', AVG(Price) FROM laptops
+UNION
+SELECT 'Mobiles', AVG(Price) FROM mobiles;
+
+#Task4:Count of products in different price ranges
+SELECT '0-1000' AS Price_Range, COUNT(*) AS Total FROM earphones WHERE Price BETWEEN 0 AND 1000
+UNION
+SELECT '1001-3000', COUNT(*) FROM earphones WHERE Price BETWEEN 1001 AND 3000
+UNION
+SELECT '3001-5000', COUNT(*) FROM earphones WHERE Price BETWEEN 3001 AND 5000
+UNION
+SELECT '5001+', COUNT(*) FROM earphones WHERE Price &gt; 5000;
+
+#task4:Max &amp; min price per category
+
+SELECT 'Earphones' AS Category, MAX(Price) AS Max_Price, MIN(Price) AS Min_Price FROM earphones
+UNION
+SELECT 'Laptops', MAX(Price), MIN(Price) FROM laptops
+UNION
+SELECT 'Mobiles', MAX(Price), MIN(Price) FROM mobiles;
+
+#task6:Average rating per product category
+
+SELECT 'Earphones' AS Category, AVG(Rating) AS Avg_Rating FROM earphones
+UNION
+SELECT 'Laptops', AVG(Rating) FROM laptops
+UNION
+SELECT 'Mobiles', AVG(Rating) FROM mobiles;
+
+#task7:Top 10 highest-rated mobile products
+
+SELECT Title, Rating, Rating_Count
+FROM mobiles
+ORDER BY Rating DESC, Rating_Count DESC
+LIMIT 10;
+
+#task8:Products with rating &gt; 4.5 and discount &gt; 20% (hot deals)
+
+SELECT Title, Rating, Discount
+FROM earphones
+WHERE Rating &gt; 2.5 AND Discount &gt; 10
+ORDER BY Rating DESC, Discount DESC;
+
+#Count of products per rating bucket
+
+SELECT
+  CASE 
+    WHEN Rating BETWEEN 0 AND 1 THEN '0-1'
+    WHEN Rating BETWEEN 1.1 AND 2 THEN '1.1-2'
+    WHEN Rating BETWEEN 2.1 AND 3 THEN '2.1-3'
+    WHEN Rating BETWEEN 3.1 AND 4 THEN '3.1-4'
+    ELSE '4.1-5'
+  END AS Rating_Range,
+  COUNT(*) AS Total_Products
+FROM laptops
+GROUP BY Rating_Range;
+
+#task10:Top 5 products with highest review count
+
+SELECT Title, Review_Count
+FROM mobiles
+ORDER BY Review_Count DESC
+LIMIT 5;
+
+#Discount &amp; Offer Analysis
+#task11:Average discount per category
+
+SELECT 'Earphones' AS Category, AVG(Discount) AS Avg_Discount FROM earphones
+UNION
+SELECT 'Laptops', AVG(Discount) FROM laptops
+UNION
+SELECT 'Mobiles', AVG(Discount) FROM mobiles;
+
+#task12:Products with 50%+ discount
+
+SELECT Title, Discount, Price
+FROM laptops
+WHERE Discount &gt;= 50
+ORDER BY Discount DESC;
+
+
+#Task13:Count of products with exchange offer
+
+SELECT COUNT(*) AS Total_Exchange_Offer
+FROM mobiles
+WHERE Exchange_Offer != 'None';
+
+#Task14:Products grouped by bank offer type
+
+SELECT Bank_Offer, COUNT(*) AS Total_Products
+FROM laptops
+GROUP BY Bank_Offer
+ORDER BY Total_Products DESC;
+
+
+#Task15:Top 5 products with maximum discount &amp; rating &gt; 4
+
+SELECT Title, Discount, Rating
+FROM earphones
+WHERE Rating &gt; 4
+ORDER BY Discount DESC
+LIMIT 5;
+
+#Time-Based &amp; Trend Analysis
+#Task 16:Count of products added per month
+SELECT strftime('%Y-%m', Timestamp) AS Month, COUNT(*) AS Total_Products
+FROM laptops
+GROUP BY Month
+ORDER BY Month;
+
+#Task17:Average rating trend per month
+
+SELECT strftime('%Y-%m', Timestamp) AS Month, AVG(Rating) AS Avg_Rating
+FROM mobiles
+GROUP BY Month
+ORDER BY Month;
+
+#task18:Products added in the last 7 days
+
+SELECT Title, Timestamp
+FROM earphones
+WHERE date(Timestamp) &gt;= date('now','-7 day')
+ORDER BY Timestamp DESC;
+
+#task19:Monthly average price trend
+SELECT strftime('%Y-%m', Timestamp) AS Month, AVG(Price) AS Avg_Price
+FROM laptops
+GROUP BY Month
+ORDER BY Month;
+
+#Task20:Products with recent high ratings
+
+SELECT Title, Rating, Timestamp
+FROM mobiles
+WHERE Rating &gt;= 4.5
+ORDER BY Timestamp DESC
+LIMIT 10;
+
+#Combined Category Insights
+#Top 5 products across all categories by rating
+SELECT Title, Rating, 'Earphones' AS Category FROM earphones
+UNION ALL
+SELECT Title, Rating, 'Laptops' FROM laptops
+UNION ALL
+SELECT Title, Rating, 'Mobiles' FROM mobiles
+ORDER BY Rating DESC
+LIMIT 5;
+#Tasks 22:Average discount by category
+
+SELECT 'Earphones' AS Category, AVG(Discount) AS Avg_Discount FROM earphones
+UNION
+SELECT 'Laptops', AVG(Discount) FROM laptops
+UNION
+SELECT 'Mobiles', AVG(Discount) FROM mobiles;
+
+
+#Task23:Top products with highest rating &amp; price above average
+
+WITH AvgPrice AS (
+    SELECT AVG(Price) AS avg_price FROM laptops
+)
+SELECT Title, Price, Rating
+FROM laptops, AvgPrice
+WHERE Price &gt; avg_price
+ORDER BY Rating DESC
+LIMIT 5;
+
+#Task24:Products offering both bank &amp; exchange offers
+
+SELECT Title, Bank_Offer, Exchange_Offer
+FROM mobiles
+WHERE Bank_Offer != 'None' AND Exchange_Offer != 'None';
+
+#Task25:Percentage of products with 4+ rating per category
+
+SELECT 'Earphones' AS Category, 
+       ROUND((COUNT(*)*100.0)/(SELECT COUNT(*) FROM earphones),2) AS Percent_4Plus
+FROM earphones
+WHERE Rating &gt;= 4
+UNION
+SELECT 'Laptops', ROUND((COUNT(*)*100.0)/(SELECT COUNT(*) FROM laptops),2)
+FROM laptops
+WHERE Rating &gt;= 4
+UNION
+SELECT 'Mobiles', ROUND((COUNT(*)*100.0)/(SELECT COUNT(*) FROM mobiles),2)
+FROM mobiles
+WHERE Rating &gt;= 4;
+
+#Product Performance &amp; Ranking
+#Task 26:Top 10 earphones by rating × discount combo
+
+SELECT Title, Rating, Discount, Price
+FROM earphones
+ORDER BY Rating*Discount DESC
+LIMIT 10;
+
+#Task27:Top 10 laptops by rating × price ratio
+
+SELECT Title, Rating, Price, (Rating/Price) AS Value_Score
+FROM laptops
+ORDER BY Value_Score DESC
+LIMIT 10;
+
+#Task28:Top 10 mobiles by review count × rating
+
+SELECT Title, Rating, Review_count, Rating*Review_count AS Score
+FROM mobiles
+ORDER BY Score DESC
+LIMIT 10;
+
+#Task29:Products with rating ≥4.5 and discount ≥30%
+SELECT Title, Rating, Discount, Price
+FROM earphones
+WHERE Rating &gt;= 4.5 AND Discount &gt;= 30
+ORDER BY Rating DESC, Discount DESC;
+
+#Task30:Products priced above category average
+
+WITH AvgPrice AS (SELECT AVG(Price) AS avg_price FROM laptops)
+SELECT Title, Price, Rating
+FROM laptops, AvgPrice
+WHERE Price &gt; avg_price
+ORDER BY Price DESC;
+
+#Offer &amp; Exchange Insights
+#Task31:Products with both bank &amp; exchange offers
+
+SELECT Title, Bank_Offer, Exchange_Offer
+FROM mobiles
+WHERE Bank_Offer != 'None' AND Exchange_Offer != 'None';
+
+#Task32:Count of products by bank offer
+
+SELECT Bank_Offer, COUNT(*) AS Total
+FROM laptops
+GROUP BY Bank_Offer
+ORDER BY Total DESC;
+
+#Task33:Count of products by exchange offer
+
+SELECT Exchange_Offer, COUNT(*) AS Total
+FROM mobiles
+GROUP BY Exchange_Offer
+ORDER BY Total DESC;
+
+#Task34:Average discount for products with exchange offer
+
+SELECT AVG(Discount) AS Avg_Discount
+FROM earphones
+WHERE Exchange_Offer != 'None';
+
+#Task35:Top products with max discount but low rating (&lt;3)
+
+SELECT Title, Discount, Rating
+FROM laptops
+WHERE Rating &lt; 3
+ORDER BY Discount DESC
+LIMIT 5;
+
+#Category Comparison &amp; Aggregations
+#Task36:Average rating by category
+
+SELECT 'Earphones' AS Category, AVG(Rating) AS Avg_Rating FROM earphones
+UNION
+SELECT 'Laptops', AVG(Rating) FROM laptops
+UNION
+SELECT 'Mobiles', AVG(Rating) FROM mobiles;
+
+#Task37:Average price by category
+
+SELECT 'Earphones' AS Category, AVG(Price) AS Avg_Price FROM earphones
+UNION
+SELECT 'Laptops', AVG(Price) FROM laptops
+UNION
+SELECT 'Mobiles', AVG(Price) FROM mobiles;
+
+#task38:Total number of products per category
+
+SELECT 'Earphones' AS Category, COUNT(*) AS Total_Products FROM earphones
+UNION
+SELECT 'Laptops', COUNT(*) FROM laptops
+UNION
+SELECT 'Mobiles', COUNT(*) FROM mobiles;
+
+#Task40:Count of products above average rating per category
+
+SELECT 'Earphones' AS Category, COUNT(*) AS High_Rating
+FROM earphones
+WHERE Rating &gt; (SELECT AVG(Rating) FROM earphones)
+UNION
+SELECT 'Laptops', COUNT(*) 
+FROM laptops
+WHERE Rating &gt; (SELECT AVG(Rating) FROM laptops)
+UNION
+SELECT 'Mobiles', COUNT(*) 
+FROM mobiles
+WHERE Rating &gt; (SELECT AVG(Rating) FROM mobiles);
+
+#Task40:Top 5 products per category by discount
+
+SELECT 'Earphones' AS Category, Title, Discount
+FROM earphones
+ORDER BY Discount DESC
+LIMIT 5
+UNION ALL
+SELECT 'Laptops', Title, Discount FROM laptops ORDER BY Discount DESC LIMIT 5
+UNION ALL
+SELECT 'Mobiles', Title, Discount FROM mobiles ORDER BY Discount DESC LIMIT 5;
+
+
+#Time-Series / Trend Analysis
+
+#task41:Monthly product addition count
+
+SELECT strftime('%Y-%m', Timestamp) AS Month, COUNT(*) AS Total
+FROM laptops
+GROUP BY Month
+ORDER BY Month;
+
+#Task41:Monthly product addition count
+
+SELECT strftime('%Y-%m', Timestamp) AS Month, AVG(Rating) AS Avg_Rating
+FROM mobiles
+GROUP BY Month
+ORDER BY Month;
+
+
+#task42:Monthly average rating trend
+
+SELECT strftime('%Y-%m', Timestamp) AS Month, AVG(Rating) AS Avg_Rating
+FROM mobiles
+GROUP BY Month
+ORDER BY Month;
+
+#task43:Monthly average discount trend
+
+SELECT strftime('%Y-%m', Timestamp) AS Month, AVG(Discount) AS Avg_Discount
+FROM earphones
+GROUP BY Month
+ORDER BY Month;
+
+#task44:Products added in last 30 days
+
+SELECT Title, Timestamp
+FROM laptops
+WHERE date(Timestamp) &gt;= date('now','-30 day')
+ORDER BY Timestamp DESC;
+
+#task45:Top products with rating increase trend
+
+-- Approximate example for Power BI trend visualization
+SELECT Title, AVG(Rating) AS Avg_Rating
+FROM mobiles
+GROUP BY Title
+ORDER BY Avg_Rating DESC
+LIMIT 10;
+
+#Advanced Insights &amp; KPI Calculations
+#Value-for-money products (Rating/Price ratio) per category
+
+SELECT 'Earphones' AS Category, Title, Rating/Price AS Value_Score
+FROM earphones
+ORDER BY Value_Score DESC
+LIMIT 5;
+
+#Products with max discount per rating bucket
+
+SELECT Rating, MAX(Discount) AS Max_Discount
+FROM laptops
+GROUP BY Rating
+ORDER BY Rating DESC;
+
+#Percentage of products with rating ≥4 per category
+
+SELECT 'Earphones' AS Category, ROUND((COUNT(*)*100.0)/(SELECT COUNT(*) FROM earphones),2) AS Percent_4Plus
+FROM earphones
+WHERE Rating &gt;= 4
+UNION
+SELECT 'Laptops', ROUND((COUNT(*)*100.0)/(SELECT COUNT(*) FROM laptops),2) FROM laptops WHERE Rating &gt;=4
+UNION
+SELECT 'Mobiles', ROUND((COUNT(*)*100.0)/(SELECT COUNT(*) FROM mobiles),2) FROM mobiles WHERE Rating &gt;=4;
+
+#Top products combining Price, Rating, Discount
+
+SELECT Title, Price, Rating, Discount, (Rating*Discount)/Price AS Score
+FROM earphones
+ORDER BY Score DESC
+LIMIT 10;
+
+#Power BI KPI example – Count of highly discounted &amp; highly rated products
+
+SELECT COUNT(*) AS Hot_Products
+FROM laptops
+WHERE Discount &gt;= 30 AND Rating &gt;= 4.5;
+
+
+
+
+
+
+
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
